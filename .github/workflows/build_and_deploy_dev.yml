@@ -52,7 +52,7 @@ jobs:
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          branch: "dev-${{emv.GITHUB_RUN_ATTEMPT}}"
+          branch: "dev-${{env.GITHUB_RUN_ATTEMPT}}"
           commit_message: push application deployment to dev
           commit_user_name: warroyo
           create_branch: true
