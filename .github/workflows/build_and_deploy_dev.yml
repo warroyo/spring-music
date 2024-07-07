@@ -31,13 +31,15 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GIT_CREDENTIALS }}
+          token: ${{ secrets.GH_PAT }}
+
 
       - name: Checkout gitops repo
         uses: actions/checkout@v4
         with:
           repository: warroyo/tpk8s-argo-gitops-demo
           path: gitops
+          token: ${{ secrets.GH_PAT }}
             
       - name: Build the app and promote it to the dev space
         env:
