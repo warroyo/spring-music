@@ -52,6 +52,7 @@ jobs:
             tanzu space use dev-sbx
             tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name}
             tanzu build -o ./deploy 
+            tree
             tanzu promote --from-build ./deploy --to ./gitops/amer-west/spaces/gitops-dev
       
 
