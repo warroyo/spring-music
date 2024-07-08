@@ -52,9 +52,15 @@ jobs:
             tanzu space use dev-sbx
             tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name} --build-plan-source custom-build-plan
             tanzu build -o ./deploy 
-            tree
             tanzu promote --from-build ./deploy --to ./gitops/gitops/amer-west/spaces/gitops-dev
       
+      - name: add annotation
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: './gitops/gitops/amer-west/spaces/gitops-dev/spring-music01/package-values.yml'
+          propertyPath: '.metadata.annotations["argocd.argoproj.io/sync-options"]'
+          value: Replace=true
+          commitChange: false
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
