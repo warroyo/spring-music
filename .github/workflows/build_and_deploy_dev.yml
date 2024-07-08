@@ -58,10 +58,15 @@ jobs:
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          branch: "dev-${{env.GITHUB_RUN_ATTEMPT}}"
+          branch: "dev-${{github.run_attempt}}"
           commit_message: push application deployment to dev
           commit_user_name: warroyo
           create_branch: true
           repository: ./gitops
+          
+      - name: create pull request
+        run: gh pr create --repo warroyo/tpk8s-argo-gitops-demo -B main -H dev-${{github.run_attempt}} --title 'dev deployment' --body 'Created by Github action'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
