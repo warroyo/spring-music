@@ -54,6 +54,7 @@ jobs:
           ENDPOINT: ${{ vars.API_ENDPOINT || 'console.cloud.vmware.com' }}
         run: |
             tanzu login --endpoint ${ENDPOINT}
+            tanzu project use AMER-West
             tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name}
             tree
             tanzu build -o ./deploy 
