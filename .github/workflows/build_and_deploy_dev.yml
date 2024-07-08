@@ -53,7 +53,7 @@ jobs:
             tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name}
             tanzu build -o ./deploy 
             tree
-            tanzu promote --from-build ./deploy --to ./gitops/amer-west/spaces/gitops-dev
+            tanzu promote --from-build ./deploy --to ./gitops/gitops/amer-west/spaces/gitops-dev
       
 
       - uses: stefanzweifel/git-auto-commit-action@v5
