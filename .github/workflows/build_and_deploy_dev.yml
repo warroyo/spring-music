@@ -45,15 +45,14 @@ jobs:
       - name: Build the app and promote it to the dev space
         env:
           TANZU_API_TOKEN: ${{ secrets.API_TOKEN }}
-          ENDPOINT: ${{ vars.API_ENDPOINT || 'console.cloud.vmware.com' }}
           TANZU_CLI_CLOUD_SERVICES_ORGANIZATION_ID: 77aee83b-308f-4c8e-b9c4-3f7a6f19ba75
         run: |
-            tanzu login --endpoint ${ENDPOINT}
+            tanzu login
             tanzu project use AMER-West
-            # tanzu space use dev-sbx
-            # tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name}
-            # tanzu build -o ./deploy 
-            # tanzu promote --from-build ./deploy --to ./gitops/amer-west/spaces/gitops-dev
+            tanzu space use dev-sbx
+            tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name}
+            tanzu build -o ./deploy 
+            tanzu promote --from-build ./deploy --to ./gitops/amer-west/spaces/gitops-dev
       
 
       - uses: stefanzweifel/git-auto-commit-action@v5
