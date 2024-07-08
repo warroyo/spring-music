@@ -50,7 +50,7 @@ jobs:
             tanzu login
             tanzu project use AMER-West
             tanzu space use dev-sbx
-            tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name}
+            tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name} --build-plan-source custom-build-plan
             tanzu build -o ./deploy 
             tree
             tanzu promote --from-build ./deploy --to ./gitops/gitops/amer-west/spaces/gitops-dev
@@ -63,7 +63,7 @@ jobs:
           commit_user_name: warroyo
           create_branch: true
           repository: ./gitops
-          
+
       - name: create pull request
         run: gh pr create --repo warroyo/tpk8s-argo-gitops-demo -B main -H dev-${{github.run_attempt}} --title 'dev deployment' --body 'Created by Github action'
         env:
