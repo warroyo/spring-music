@@ -52,6 +52,7 @@ jobs:
         env:
           TANZU_API_TOKEN: ${{ secrets.API_TOKEN }}
           ENDPOINT: ${{ vars.API_ENDPOINT || 'console.cloud.vmware.com' }}
+          TANZU_CLI_CLOUD_SERVICES_ORGANIZATION_ID: 77aee83b-308f-4c8e-b9c4-3f7a6f19ba75
         run: |
             tanzu login --endpoint ${ENDPOINT}
             tanzu project use AMER-West
