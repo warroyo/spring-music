@@ -55,8 +55,8 @@ jobs:
         run: |
             tanzu login --endpoint ${ENDPOINT}
             tanzu project use AMER-West
+            tanzu space use dev-sbx
             tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name}
-            tree
             tanzu build -o ./deploy 
             tanzu promote --from-build ./deploy --to ./gitops/amer-west/spaces/gitops-dev
       
