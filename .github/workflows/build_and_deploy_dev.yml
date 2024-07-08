@@ -26,7 +26,7 @@ jobs:
         env:
           TANZU_CLI_INCLUDE_DEACTIVATED_PLUGINS_TEST_ONLY: 1
         run: |
-          tanzu plugin install resource -v v0.2.1 -t 'global'
+          tanzu plugin install --group vmware-tanzu/app-developer
 
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -40,6 +40,13 @@ jobs:
           repository: warroyo/tpk8s-argo-gitops-demo
           path: gitops
           token: ${{ secrets.GH_PAT }}
+
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GH_PAT }}
             
       - name: Build the app and promote it to the dev space
         env:
@@ -47,6 +54,7 @@ jobs:
           ENDPOINT: ${{ vars.API_ENDPOINT || 'console.cloud.vmware.com' }}
         run: |
             tanzu login --endpoint ${ENDPOINT}
+            tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name}
             tree
             tanzu build -o ./deploy 
             tanzu promote --from-build ./deploy --to ./gitops/amer-west/spaces/gitops-dev
