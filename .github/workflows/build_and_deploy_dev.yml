@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} building app
 on:
   push:
     branches:
-      - "gitops-demo"
+      - "flux-gitops-demo"
 jobs:
   gitops-deploy:
     runs-on: ubuntu-latest
@@ -31,7 +31,7 @@ jobs:
       - name: Checkout gitops repo
         uses: actions/checkout@v4
         with:
-          repository: warroyo/tpk8s-argo-gitops-demo
+          repository: warroyo/tpk8s-flux-gitops-demo
           path: gitops
           token: ${{ secrets.GH_PAT }}
 
@@ -52,15 +52,8 @@ jobs:
             tanzu space use dev-sbx
             tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name} --build-plan-source custom-build-plan
             tanzu build -o ./deploy 
-            tanzu promote --from-build ./deploy --to ./gitops/gitops/amer-west/spaces/gitops-dev
+            tanzu promote --from-build ./deploy --to ./gitops/gitops/amer-west/spaces/flux-dev
       
-      - name: add annotation
-        uses: fjogeleit/yaml-update-action@main
-        with:
-          valueFile: './gitops/gitops/amer-west/spaces/gitops-dev/spring-music01/package-values.yml'
-          propertyPath: '.metadata.annotations["argocd.argoproj.io/sync-options"]'
-          value: Replace=true
-          commitChange: false
 
       - uses: stefanzweifel/git-auto-commit-action@v5
         with:
@@ -71,7 +64,7 @@ jobs:
           repository: ./gitops
 
       - name: create pull request
-        run: gh pr create --repo warroyo/tpk8s-argo-gitops-demo -B main -H dev-${{github.run_attempt}} --title 'dev deployment' --body 'Created by Github action'
+        run: gh pr create --repo warroyo/tpk8s-flux-gitops-demo -B main -H dev-${{github.run_attempt}} --title 'dev deployment' --body 'Created by Github action'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
