@@ -27,6 +27,7 @@ variables:
     readonly: false
 steps:
   - checkout: self
+    
     persistCredentials: true
   - checkout: ado-gitops-repo
   - task: Docker@2
@@ -52,7 +53,7 @@ steps:
   - task: CmdLine@2
     displayName: Build Application
     inputs:
-      workingDirectory: '$(Build.SourcesDirectory)/CurrentRepo'
+      workingDirectory: '$(Build.SourcesDirectory)/spring-music'
       script: |
         tanzu build config --build-plan-source-type=ucp --containerapp-registry $CONTAINERREGISTRY --build-plan-source $BUILDPLANSOURCE
         
