@@ -21,7 +21,7 @@ variables:
   - name: ServiceConnection
     value: ghcr
   - name: ContainerRegistry
-    value: ghcr.io
+    value: ghcr.io/{contact.team}/{name}
   - name: BuildPlanSource
     value: custom-build-plan
     readonly: false
