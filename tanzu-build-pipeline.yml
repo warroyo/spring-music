@@ -6,15 +6,15 @@ pool:
 
 variables:
   - name: Project
-    value: <<ENTER VALUE>>
+    value: AMER-WEST
     readonly: false
   - name: Space
-    value: <<ENTER VALUE>>
+    value: dev-int
     readonly: false
   - name: ServiceConnection
-    value: <<ENTER VALUE>>
+    value: ghcr
   - name: ContainerRegistry
-    value: <<ENTER VALUE>>
+    value: ghcr.io
   - name: BuildPlanSource
     value: custom-build-plan
     readonly: false
