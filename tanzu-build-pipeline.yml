@@ -79,6 +79,8 @@ steps:
       echo "##vso[task.setvariable variable=doPR]Yes" 
     displayName: push promoted files to gitops repo
     env:
+      GIT_COMMITTER_NAME: ado
+      GIT_COMMITTER_EMAIL: tpk8s-ado-automation@vmware.com
       GIT_AUTHOR_NAME: ado
       GIT_AUTHOR_EMAIL: tpk8s-ado-automation@vmware.com
     workingDirectory: '$(Build.SourcesDirectory)/tpk8s-ado-demo'
