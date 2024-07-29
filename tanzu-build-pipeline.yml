@@ -52,7 +52,7 @@ steps:
   - task: CmdLine@2
     displayName: Build Application
     inputs:
-      workingDirectory: '$(System.DefaultWorkingDirectory)/CurrentRepo'
+      workingDirectory: '$(Build.SourcesDirectory)/CurrentRepo'
       script: |
         tanzu build config --build-plan-source-type=ucp --containerapp-registry $CONTAINERREGISTRY --build-plan-source $BUILDPLANSOURCE
         
