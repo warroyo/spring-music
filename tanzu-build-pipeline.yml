@@ -1,6 +1,6 @@
 resources:
   repositories:
-  - repository: ado-gitops-repo # The name used to reference this repository in the checkout step
+  - repository: tpk8s-ado-demo # The name used to reference this repository in the checkout step
     type: github
     endpoint: warroyo
     name: warroyo/tpk8s-ado-demo
@@ -29,7 +29,7 @@ steps:
   - checkout: self
     
     persistCredentials: true
-  - checkout: ado-gitops-repo
+  - checkout: tpk8s-ado-demo
   - task: Docker@2
     displayName: Login to Container Registry
     inputs:
@@ -62,5 +62,40 @@ steps:
         
         tanzu build -o deploy
 
-        tanzu promote --from-build ./deploy --to ../ado-gitops-repo/amer-west/spaces/dev-int
-  
+        tanzu promote --from-build ./deploy --to ../tpk8s-ado-demo/amer-west/spaces/dev-int
+  - script: |
+      git config --global user.email tpk8s-ado-automation@vmware.com & git config --global user.name "ado"
+    workingDirectory: '$(Build.SourcesDirectory)/tpk8s-ado-demo'
+  - script: |
+      set -o errexit
+      git fetch --all
+      git add .
+      if git diff --cached --exit-code ./; then
+        echo "Nothing to commit"
+        echo "##vso[task.setvariable variable=doPR]No"
+        exit 0
+      fi
+      echo "committing new promoted files"
+      git checkout -b $(Build.BuildNumber)
+      git commit -m "promoting build $(Build.BuildNumber)"
+      git push --set-upstream origin $(Build.BuildNumber)
+      echo "##vso[task.setvariable variable=doPR]Yes" 
+    displayName: push promoted files to gitops repo
+    workingDirectory: '$(Build.SourcesDirectory)/tpk8s-ado-demo'
+  - script: |
+      curl -LO https://github.com/jenkins-x-plugins/jx-scm/releases/download/v0.2.41/jx-scm-linux-amd64.tar.gz
+      tar -xvf jx-scm-linux-amd64.tar.gz
+      ./jx-scm pull-request create \
+        --kind "github" \
+        --server "https://github.com" \
+        --owner "warroyo" \
+        --name "tpk8s-ado-demo" \
+        --head "$(Build.BuildNumber)" \
+        --title "promote pipeline PR" \
+        --body "add new promoted build" \
+        --base "main" \
+        --allow-update
+    displayName: create PR
+    condition: and(succeeded(), eq(variables['doPr'], 'Yes'))
+    env:
+      GIT_TOKEN: $(github-pat)
