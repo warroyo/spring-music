@@ -52,6 +52,7 @@ steps:
   - task: CmdLine@2
     displayName: Build Application
     inputs:
+      workingDirectory: '$(System.DefaultWorkingDirectory)/CurrentRepo'
       script: |
         tanzu build config --build-plan-source-type=ucp --containerapp-registry $CONTAINERREGISTRY --build-plan-source $BUILDPLANSOURCE
         
@@ -59,4 +60,6 @@ steps:
         tanzu space use $SPACE
         
         tanzu build -o deploy
+
+        tanzu promote --from-build ./deploy --to ../ado-gitops-repo/amer-west/spaces/dev-int
   
