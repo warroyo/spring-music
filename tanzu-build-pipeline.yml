@@ -64,9 +64,6 @@ steps:
 
         tanzu promote --from-build ./deploy --to ../tpk8s-ado-demo/amer-west/spaces/dev-int
   - script: |
-      git config --global user.email tpk8s-ado-automation@vmware.com & git config --global user.name "ado"
-    workingDirectory: '$(Build.SourcesDirectory)/tpk8s-ado-demo'
-  - script: |
       set -o errexit
       git fetch --all
       git add .
@@ -81,6 +78,9 @@ steps:
       git push --set-upstream origin $(Build.BuildNumber)
       echo "##vso[task.setvariable variable=doPR]Yes" 
     displayName: push promoted files to gitops repo
+    env:
+      GIT_COMMITTER_NAME: ado
+      GIT_COMMITTER_EMAIL: tpk8s-ado-automation@vmware.com
     workingDirectory: '$(Build.SourcesDirectory)/tpk8s-ado-demo'
   - script: |
       curl -LO https://github.com/jenkins-x-plugins/jx-scm/releases/download/v0.2.41/jx-scm-linux-amd64.tar.gz
