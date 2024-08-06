@@ -1,7 +1,9 @@
 spring:
   jpa:
     generate-ddl: true
-
+  application:
+    name: spring-music
+    
 management:
   endpoints:
     web:
