@@ -19,4 +19,5 @@ build/
 
 *.log*
 /classes/
-deploy/
+deploy/*
+run-gradle-assessment.sh
