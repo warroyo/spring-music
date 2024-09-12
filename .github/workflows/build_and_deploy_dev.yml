@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} building app
 on:
   push:
     branches:
-      - "flux-gitops-demo"
+      - "actions-demo"
 jobs:
   gitops-deploy:
     runs-on: ubuntu-latest
@@ -11,9 +11,9 @@ jobs:
       - name: Install Tanzu CLI
         run: |
           export TANZU_CLI_CEIP_OPT_IN_PROMPT_ANSWER=no
-          wget https://github.com/vmware-tanzu/tanzu-cli/releases/download/v1.3.0/tanzu-cli-linux-amd64.tar.gz -O /tmp/tanzu.tar.gz
+          wget https://github.com/vmware-tanzu/tanzu-cli/releases/download/v1.4.1/tanzu-cli-linux-amd64.tar.gz -O /tmp/tanzu.tar.gz
           tar -xvf /tmp/tanzu.tar.gz -C /tmp
-          install /tmp/v1.3.0/tanzu-cli-linux_amd64 /usr/local/bin/tanzu
+          install /tmp/v1.4.1/tanzu-cli-linux_amd64 /usr/local/bin/tanzu
           tanzu config eula accept
           tanzu init
           tanzu version
@@ -21,6 +21,8 @@ jobs:
       - name: Install tanzu plugins
         run: |
           tanzu plugin install --group vmware-tanzu/app-developer
+          export TANZU_CLI_INCLUDE_DEACTIVATED_PLUGINS_TEST_ONLY=true
+          tanzu plugin install resource --version v0.3.0
 
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -31,7 +33,7 @@ jobs:
       - name: Checkout gitops repo
         uses: actions/checkout@v4
         with:
-          repository: warroyo/tpk8s-flux-gitops-demo
+          repository: warroyo/tpk8s-ga-gitops-demo
           path: gitops
           token: ${{ secrets.GH_PAT }}
 
@@ -49,10 +51,10 @@ jobs:
         run: |
             tanzu login
             tanzu project use AMER-West
-            tanzu space use dev-sbx
-            tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name} --build-plan-source custom-build-plan
+            tanzu space use warroyo-sbx
+            tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name} --build-plan-source custom-build-plan-ingressv2
             tanzu build -o ./deploy 
-            tanzu promote --from-build ./deploy --to ./gitops/gitops/amer-west/spaces/flux-dev
+            tanzu promote --from-build ./deploy --to ./gitops/gitops/amer-west/spaces/warroyo-sbx
       
 
       - uses: stefanzweifel/git-auto-commit-action@v5
@@ -64,7 +66,7 @@ jobs:
           repository: ./gitops
 
       - name: create pull request
-        run: gh pr create --repo warroyo/tpk8s-flux-gitops-demo -B main -H dev-${{github.run_attempt}} --title 'dev deployment' --body 'Created by Github action'
+        run: gh pr create --repo warroyo/tpk8s-ga-gitops-demo -B main -H dev-${{github.run_attempt}} --title 'dev deployment' --body 'Created by Github action'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_PAT }}
 
