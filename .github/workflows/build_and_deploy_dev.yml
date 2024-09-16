@@ -54,7 +54,7 @@ jobs:
             tanzu space use warroyo-sbx
             tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name} --build-plan-source custom-build-plan-ingressv2
             tanzu build -o ./deploy 
-            tanzu promote --from-build ./deploy --to ./gitops/amer-west/spaces/warroyo-sbx
+            tanzu promote --from-build ./deploy --to ./gitops/spaces/warroyo-dev
       
 
       - uses: stefanzweifel/git-auto-commit-action@v5
