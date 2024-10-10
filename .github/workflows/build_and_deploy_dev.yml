@@ -49,7 +49,7 @@ jobs:
         run: |
             tanzu login
             tanzu project use AMER-West
-            tanzu space use dev-sbx
+            tanzu space use flux-dev
             tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name} --build-plan-source custom-build-plan-ingressv2
             tanzu build -o ./deploy 
             tanzu promote --from-build ./deploy --to ./gitops/gitops/amer-west/spaces/flux-dev
