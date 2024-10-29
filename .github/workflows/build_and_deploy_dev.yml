@@ -49,8 +49,7 @@ jobs:
         run: |
             tanzu login
             tanzu project use AMER-West
-            tanzu space use warroyo-sbx
-            tanzu build config --build-plan-source-type=ucp --containerapp-registry ghcr.io/{contact.team}/{name} --build-plan-source custom-build-plan-ingressv2
+            tanzu build config --build-engine platform
             tanzu build -o ./deploy 
             tanzu promote --from-build ./deploy --to ./gitops/amer-west/spaces/warroyo-dev
       
